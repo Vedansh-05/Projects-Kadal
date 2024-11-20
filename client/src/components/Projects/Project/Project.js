@@ -1,3 +1,4 @@
+// client/src/components/Projects/Project/Project.js
 import React from "react";
 import {
   Card,
@@ -7,13 +8,17 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { deleteProject } from "../../../actions/projects";
 
 import useStyles from "./styles";
 
-const Project = ({ project }) => {
+const Project = ({ project, isLoggedIn }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const isEnrollmentClosed = moment().isAfter(project.enrollmentDeadline);
 
   return (
@@ -30,9 +35,11 @@ const Project = ({ project }) => {
         </Typography>
       </div>
       <div className={classes.overlay2}>
-        <Button style={{ color: "white" }} size="small" onClick={() => {}}>
-          <MoreHorizIcon fontSize="default" />
-        </Button>
+        {isLoggedIn && (
+          <Button style={{ color: "white" }} size="small" onClick={() => {}}>
+            <MoreHorizIcon fontSize="default" />
+          </Button>
+        )}
       </div>
       <CardContent>
         <Typography className={classes.title} variant="h5" gutterBottom>
@@ -68,6 +75,14 @@ const Project = ({ project }) => {
         >
           Project Description
         </Button>
+        {isLoggedIn && (
+          <>
+            <Button size="small" color="primary" onClick={() => dispatch(deleteProject(project._id))}>
+              <DeleteIcon fontSize="small" />
+              Delete
+            </Button>
+          </>
+        )}
       </CardActions>
     </Card>
   );
